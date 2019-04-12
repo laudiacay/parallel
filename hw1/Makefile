@@ -1,12 +1,10 @@
 CCBIN=/usr/bin/gcc
-CC=$(CCBIN) -Wall -Wextra -Werror -std=c99 -pedantic -g -fsanitize=address
-C_LIBS=
-LINK_LIBS=
+CC=$(CCBIN) -Wall -Wextra -Werror -pedantic -g -fsanitize=address -fno-omit-frame-pointer
 
 default: floydwarshall
 
-floydwarshall: $(C_LIBS) floydwarshall.c
-	$(CC) -O3 -o floydwarshall $(C_LIBS) floydwarshall.c $(LINK_LIBS)
+floydwarshall: lib/*.h serial.c floydwarshall.c adj_mat.c
+	$(CC) -O3 -o floydwarshall floydwarshall.c serial.c adj_mat.c
 
 clean :
-	rm floydwarshall
+	rm -f floydwarshall
