@@ -37,13 +37,13 @@ int main(int argc, char *argv[]) {
     switch (argv[1][0]) {
         case 's':
             start = clock();
-            for (int i = 0; i < 100; i++) adj_mat = serial_fw(adj_mat);
+            for (int i = 0; i < 1; i++) adj_mat = serial_fw(adj_mat);
             end = clock();
             if (!adj_mat) error_and_exit();
             break;
         case 'p':
             start = clock();
-            for (int i = 0; i < 100; i++) adj_mat = parallel_fw(adj_mat, t);
+            for (int i = 0; i < 1; i++) adj_mat = parallel_fw(adj_mat, t);
             end = clock();
             if (!adj_mat) error_and_exit();
             break;
