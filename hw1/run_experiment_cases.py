@@ -13,8 +13,10 @@ def test_n(n, t):
         p_time = float(proc.stdout.strip())
         speedups.append(s_time/p_time)
     avg_speedup = sum(speedups)/len(speedups)
-    print('{}, {}, {}'.format(n, t, avg_speedup))
+    var_speedup = sum([(s - avg_speedup)**2 for s in speedups])/len(speedups)
+    print('{}, {}, {}, {}'.format(n, t, avg_speedup, var_speedup))
 
+print('n, t, speedupmean, speedupvariance')
 for n in [16, 32, 64, 128, 256, 512, 1024]:
     for t in [1, 2, 4, 8, 16, 32, 64]:
         if t <= n:
