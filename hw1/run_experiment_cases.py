@@ -16,7 +16,7 @@ def test_n(n, t):
     var_speedup = sum([(s - avg_speedup)**2 for s in speedups])/len(speedups)
     return avg_speedup, var_speedup
 
-print('t, 1, 2, 4, 8, 16, 32, 64')
+print('n, 1, 2, 4, 8, 16, 32, 64')
 n_list = [16, 32, 64, 128, 256, 512, 1024]
 t_list = [1, 2, 4, 8, 16, 32, 64]
 lookups = {}

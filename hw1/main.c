@@ -34,6 +34,7 @@ int main(int argc, char *argv[]) {
 
     clock_t start, end;
     int t = strtol(argv[2], NULL, 10);
+    struct pthreads* pthreads;
     switch (argv[1][0]) {
         case 's':
             start = clock();
@@ -42,7 +43,7 @@ int main(int argc, char *argv[]) {
             if (!adj_mat) error_and_exit();
             break;
         case 'p':
-            struct pthreads* pthreads = prep_thread_args(t, adj_mat);
+            pthreads = prep_thread_args(t, adj_mat);
             start = clock();
             adj_mat = parallel_fw(adj_mat, pthreads);
             end = clock();
@@ -53,7 +54,7 @@ int main(int argc, char *argv[]) {
             return usage();
     }
     write_adj_mat(adj_mat, argv[4]);
-    printf("%f\n", ((double)(end - start))/CLOCKS_PER_SEC);
+    printf("%ld\n", end - start);
     free_adj_mat(adj_mat);
     return 0;
 }
