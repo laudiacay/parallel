@@ -43,31 +43,46 @@ void* do_rows(void* packed_params) {
     return NULL;
 }
 
-struct adj_mat* parallel_fw(struct adj_mat* adj_mat, int t_num) {
-    pthread_t* threads = malloc(sizeof(pthread_t) * t_num);
-    struct pthread_params** thread_args =
-        malloc(sizeof(struct pthread_params) * t_num);
+struct pthreads* prep_thread_args(int t, struct adj_mat* adj_mat) {
+    struct pthreads* pthreads = malloc(sizeof(struct pthreads));
+    pthread_t* ts = malloc(sizeof(pthread_t) * t);
+    struct pthread_params** t_args = malloc(sizeof(struct pthread_params) * t);
+    pthreads->ts = ts;
+    pthreads->t_args = t_args;
+    pthreads->t = t;
+
+    int n = adj_mat->n;
+    int step = n / t;
+
+    for (int i = 0; i < t; i++) {
+        t_args[i] = malloc(sizeof(struct pthread_params));
+        t_args[i]->adj_mat = adj_mat;
+        t_args[i]->start = step * i;
+        t_args[i]->end = step * (i + 1);
+        t_args[i]->t = i;
+    }
+    return pthreads;
+}
+
+void thread_teardown(struct pthreads* pts) {
+    for (int i = 0; i < pts->t; i++) free(pts->t_args[i]);
+    free(pts->ts);
+    free(pts->t_args);
+    free(pts);
+}
+
+struct adj_mat* parallel_fw(struct adj_mat* adj_mat, struct pthreads* pthreads) {
+    pthread_t* ts = pthreads->ts;
+    int t_num = pthreads->t;
+    struct pthread_params** t_args = pthreads->t_args;
 
     assert(!pthread_barrier_init(&barrier, NULL, t_num));
 
-    int n = adj_mat->n;
-    int step = n / t_num;
     for (int t = 0; t < t_num; t++) {
-        thread_args[t] = malloc(sizeof(struct pthread_params));
-        thread_args[t]->adj_mat = adj_mat;
-        thread_args[t]->start = step * t;
-        thread_args[t]->end = step * (t + 1);
-        thread_args[t]->t = t;
-        assert(!pthread_create(&threads[t], NULL, do_rows, thread_args[t]));
+        assert(!pthread_create(&ts[t], NULL, do_rows, t_args[t]));
     }
 
-    for (int t = 0; t < t_num; t++) {
-        // join pthread
-        assert(!pthread_join(threads[t], NULL));
-        // free its params
-        free(thread_args[t]);
-    }
-    free(threads);
-    free(thread_args);
+    for (int t = 0; t < t_num; t++) assert(!pthread_join(ts[t], NULL));
+
     return adj_mat;
 }

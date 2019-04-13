@@ -14,10 +14,17 @@ def test_n(n, t):
         speedups.append(s_time/p_time)
     avg_speedup = sum(speedups)/len(speedups)
     var_speedup = sum([(s - avg_speedup)**2 for s in speedups])/len(speedups)
-    print('{}, {}, {}, {}'.format(n, t, avg_speedup, var_speedup))
+    return avg_speedup, var_speedup
 
-print('n, t, speedupmean, speedupvariance')
-for n in [16, 32, 64, 128, 256, 512, 1024]:
-    for t in [1, 2, 4, 8, 16, 32, 64]:
+print('t, 1, 2, 4, 8, 16, 32, 64')
+n_list = [16, 32, 64, 128, 256, 512, 1024]
+t_list = [1, 2, 4, 8, 16, 32, 64]
+lookups = {}
+for n in n_list:
+    for t in t_list:
         if t <= n:
-            test_n(n, t)
+            lookups[(n, t)] = test_n(n, t)
+
+line = lambda n: str(n) + ', ' + ', '.join([str(lookups[(n,t)][0] if (n,t) in lookups else '') for t in t_list])
+for n in n_list:
+    print(line(n))
