@@ -60,7 +60,11 @@ struct pthreads* prep_thread_args(int t, struct adj_mat* adj_mat) {
         t_args[i]->start = step * i;
         t_args[i]->end = step * (i + 1);
         t_args[i]->t = i;
+        //printf("%lu: (%d, %d)\n", t_args[i]->t, t_args[i]->start, t_args[i]->end);
     }
+    
+    assert(!pthread_barrier_init(&barrier, NULL, t));
+    
     return pthreads;
 }
 
@@ -75,8 +79,6 @@ struct adj_mat* parallel_fw(struct adj_mat* adj_mat, struct pthreads* pthreads) 
     pthread_t* ts = pthreads->ts;
     int t_num = pthreads->t;
     struct pthread_params** t_args = pthreads->t_args;
-
-    assert(!pthread_barrier_init(&barrier, NULL, t_num));
 
     for (int t = 0; t < t_num; t++) {
         assert(!pthread_create(&ts[t], NULL, do_rows, t_args[t]));

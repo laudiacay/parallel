@@ -4,6 +4,7 @@
 #include <time.h>
 #include "lib/adj_mat.h"
 #include "lib/floydwarshall.h"
+#include "lib/stopwatch.h"
 
 int usage() {
     printf("Usage:\n");
@@ -32,21 +33,21 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    clock_t start, end;
     int t = strtol(argv[2], NULL, 10);
     struct pthreads* pthreads;
+    StopWatch_t* timer = malloc(sizeof(StopWatch_t));
     switch (argv[1][0]) {
         case 's':
-            start = clock();
+            startTimer(timer);
             adj_mat = serial_fw(adj_mat);
-            end = clock();
+            stopTimer(timer);
             if (!adj_mat) error_and_exit();
             break;
         case 'p':
             pthreads = prep_thread_args(t, adj_mat);
-            start = clock();
+            startTimer(timer);
             adj_mat = parallel_fw(adj_mat, pthreads);
-            end = clock();
+            stopTimer(timer);
             thread_teardown(pthreads);
             if (!adj_mat) error_and_exit();
             break;
@@ -54,7 +55,8 @@ int main(int argc, char *argv[]) {
             return usage();
     }
     write_adj_mat(adj_mat, argv[4]);
-    printf("%ld\n", end - start);
+    printf("%f\n", getElapsedTime(timer));
+    free(timer);
     free_adj_mat(adj_mat);
     return 0;
 }
