@@ -1,6 +1,9 @@
 #ifndef LAMPORTQ
 #define LAMPORTQ
 
+#include <stdlib.h>
+#include <stdio.h>
+
 struct WaitFreeQueue {
     volatile int head;
     volatile int tail;

@@ -1,6 +1,4 @@
 #include "lib/serialq.h"
-#include "lib/fingerprint.h"
-#include <assert.h>
 
 void serialq_experiment(PacketSource_t* packetsource, long T, int n, char mode,
         struct WaitFreeQueue** qs) {

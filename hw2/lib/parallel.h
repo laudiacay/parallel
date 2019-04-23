@@ -2,7 +2,11 @@
 #define PARALLEL
 
 #include "lamportQ.h"
-#include "packetsource.h"
+#include "../provided/lib/packetsource.h"
+#include "../provided/lib/fingerprint.h"
+#include <unistd.h>
+#include <pthread.h>
+#include <assert.h>
 
 struct WorkerArgs {
     int T;

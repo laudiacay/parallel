@@ -1,12 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include "lib/lamportQ.h"
-#include "lib/packetsource.h"
-#include "lib/stopwatch.h"
 #include "lib/serial.h"
 #include "lib/parallel.h"
 #include "lib/serialq.h"
+#include "provided/lib/packetsource.h"
+#include "provided/lib/stopwatch.h"
 
 int usage() {
     printf("Usage:\n");
@@ -67,9 +66,11 @@ int main(int argc, char *argv[]) {
             break;
         case 'q':
             wfqs = makeWaitFreeQueues(N-1, D);
+
             startTimer(timer);
             serialq_experiment(packetsource, T, N-1, mode, wfqs);
             stopTimer(timer);
+            
             freeWaitFreeQueues(wfqs, N-1);
             break;
         default:

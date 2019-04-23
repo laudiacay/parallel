@@ -1,8 +1,4 @@
 #include "lib/parallel.h"
-#include "lib/fingerprint.h"
-#include "lib/lamportQ.h"
-#include <pthread.h>
-#include <assert.h>
 
 void** build_worker_args(int n, struct WaitFreeQueue** wfq, int T) {
     void** worker_args_array = malloc(n * sizeof(void*));
@@ -35,7 +31,7 @@ void* parallel_worker(void* args) {
 
     for (int i = 0; i < T; i++) {
         // spin until you get a packet
-        while (! (packet = (volatile Packet_t*) deq(wfq)));
+        while (! (packet = (volatile Packet_t*) deq(wfq))) sleep(0);
         // checksum it
         getFingerprint(packet->iterations, packet->seed);
         // and free it

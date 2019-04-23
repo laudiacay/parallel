@@ -1,6 +1,4 @@
 #include "lib/lamportQ.h"
-#include <stdlib.h>
-#include <stdio.h>
 
 struct WaitFreeQueue* makeWaitFreeQueue(int capacity) {
     struct WaitFreeQueue* wfq = malloc(sizeof(struct WaitFreeQueue));
@@ -14,7 +12,6 @@ struct WaitFreeQueue* makeWaitFreeQueue(int capacity) {
 // return 0 for success, 1 for fail
 int enq(struct WaitFreeQueue* wfq, volatile void* item) {
     if (wfq->tail - wfq->head == wfq->capacity) return 1;
-    __sync_synchronize();
     wfq->items[wfq->tail % wfq->capacity] = item;
     __sync_synchronize();
     wfq->tail++;
@@ -29,7 +26,6 @@ int isfull(struct WaitFreeQueue* wfq) {
 // return item for success, NULL for fail
 volatile void* deq(struct WaitFreeQueue* wfq) {
     if (wfq->tail - wfq->head == 0) return NULL;
-    __sync_synchronize();
     void* item = (void*) wfq->items[wfq->head % wfq->capacity];
     __sync_synchronize();
     wfq->head++;

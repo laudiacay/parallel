@@ -1,6 +1,4 @@
-#include <assert.h>
 #include "lib/serial.h"
-#include "lib/fingerprint.h"
 
 void serial_experiment(PacketSource_t* packetsource, long T, char mode) {
 
