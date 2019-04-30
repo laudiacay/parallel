@@ -70,12 +70,15 @@ int main(int argc, char *argv[]) {
             startTimer(timer);
             serialq_experiment(packetsource, T, N-1, mode, wfqs);
             stopTimer(timer);
-            
+
             freeWaitFreeQueues(wfqs, N-1);
             break;
         default:
+            deletePacketSource(packetsource);
+            free(timer);
             return usage();
     }
+
     printf("%f\n", getElapsedTime(timer));
     deletePacketSource(packetsource);
     free(timer);
