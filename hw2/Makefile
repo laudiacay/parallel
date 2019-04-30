@@ -1,5 +1,5 @@
 CCBIN=/usr/bin/gcc
-CC=$(CCBIN) -Wall -Wextra -Werror -pedantic -g -fsanitize=address
+CC=$(CCBIN) -Wall -Wextra -Werror -pedantic -g -std=c99
 FLAGS=-O3 -lm -lpthread -pthread
 PROV_CFILES=provided/crc32.c provided/fingerprint.c provided/generators.c\
 	provided/packetsource.c provided/stopwatch.c
