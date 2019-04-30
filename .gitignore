@@ -102,6 +102,5 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-tests/
 tests.bak/
 *_out.txt
