@@ -10,7 +10,7 @@ int usage() {
     printf("Usage:\n");
     printf("\t./locks t l n b\n");
     printf("t: type of test, s=serial, p=parallel\n");
-    printf("l: type of lock for parallel, t=TAS, m=Mutex, a=Anderson, c=CLHQueue\n");
+    printf("l: type of lock for parallel, t=TAS, 2=TTAS, m=Mutex, a=Anderson, c=CLHQueue\n");
     printf("n: number of worker threads\n");
     printf("b: number to which we are counting\n");
     return 1;

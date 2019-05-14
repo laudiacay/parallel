@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "lock_src/lib/taslock.h"
+#include "lock_src/lib/ttaslock.h"
 #include "lock_src/lib/mutlock.h"
 #include "lock_src/lib/alock.h"
 #include "lock_src/lib/clhlock.h"
@@ -11,6 +12,9 @@ struct lock* init_lock(char lock_type, int capacity) {
     switch (lock_type) {
         case 't':
             lock->lock = init_taslock();
+            break;
+        case '2':
+            lock->lock = init_ttaslock();
             break;
         case 'm':
             lock->lock = init_mutlock();
@@ -32,6 +36,9 @@ void destroy_lock(struct lock* lock) {
         case 't':
             destroy_taslock(lock->lock);
             break;
+        case '2':
+            destroy_ttaslock(lock->lock);
+            break;
         case 'm':
             destroy_mutlock(lock->lock);
             break;
@@ -50,6 +57,9 @@ void lock(struct lock* lock, int* myslot, struct QNode** myNode) {
         case 't':
             tas_lock(lock->lock);
             break;
+        case '2':
+            ttas_lock(lock->lock);
+            break;
         case 'm':
             mut_lock(lock->lock);
             break;
@@ -66,16 +76,14 @@ int trylock(struct lock* lock, int* myslot, struct QNode** myNode) {
     switch (lock->lock_type) {
         case 't':
             return tas_trylock(lock->lock);
-            break;
+        case '2':
+            return ttas_trylock(lock->lock);
         case 'm':
             return mut_trylock(lock->lock);
-            break;
         case 'a':
             return a_trylock(lock->lock, myslot);
-            break;
         case 'c':
             return clh_trylock(lock->lock, myNode);
-            break;
     }
     return 0;
 }
@@ -84,6 +92,9 @@ void unlock(struct lock* lock, int* myslot, struct QNode** myNode) {
     switch (lock->lock_type) {
         case 't':
             tas_unlock(lock->lock);
+            break;
+        case '2':
+            ttas_unlock(lock->lock);
             break;
         case 'm':
             mut_unlock(lock->lock);
