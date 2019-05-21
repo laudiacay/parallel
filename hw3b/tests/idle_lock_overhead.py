@@ -12,7 +12,7 @@ def run_packets_n_times(arg_tup, n):
     li = [run_packets(*arg_tup, sd=i) for i in range(n)]
     return sum(li)/n
 
-m = 10000
+m = 4000
 n = 1
 opt_opts = ['l', 'h']
 L_opts = ['m', 'a']
