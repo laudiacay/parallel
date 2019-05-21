@@ -29,7 +29,7 @@ void* awesome_worker(void* v_aw_work_args) {
 
     volatile Packet_t* packet;
 
-    int cur_queue_num = alock_slot - 1;
+    int cur_queue_num = alock_slot;
 
     struct WaitFreeQueue* wfq = wfqs[cur_queue_num];
     struct lock* mylock = locks[cur_queue_num];
@@ -55,8 +55,6 @@ void* awesome_worker(void* v_aw_work_args) {
 
 struct aw_disp_args_t {
     struct WaitFreeQueue** wfqs;
-    struct lock** locks;
-    int alock_slot;
     PacketSource_t* p_source;
     volatile Packet_t* (*getPacket)(PacketSource_t*, int);
 };
@@ -67,17 +65,13 @@ void* awesome_dispatcher(void* v_disp_args) {
     struct WaitFreeQueue** wfqs = disp_args->wfqs;
     PacketSource_t* p_source = disp_args->p_source;
     volatile Packet_t* (*getPacket)(PacketSource_t*, int) = disp_args->getPacket;
-    struct lock** locks = disp_args->locks;
-    int alock_slot = disp_args->alock_slot;
 
     int n = p_source->numSources;
 
     while (!aw_should_quit) {
         for (int t = 0; t < n; t++) {
-            lock(locks[t], &alock_slot);
             if (!isfull(wfqs[t]))
                 assert(!enq(wfqs[t], getPacket(p_source, t)));
-            unlock(locks[t], &alock_slot);
         }
     }
     return NULL;
@@ -94,17 +88,17 @@ void awesome_exp(PacketSource_t* p_source,
 
     for (int i = 0; i < n; i++) {
         wfqs[i] = makeWaitFreeQueue(D);
-        locks[i] = init_lock(L, n+1);
+        locks[i] = init_lock(L, n);
     }
 
     for (int i = 0; i < n; i++) {
         aw_work_args[i].wfqs = wfqs;
         aw_work_args[i].locks = locks;
-        aw_work_args[i].alock_slot = i+1;
+        aw_work_args[i].alock_slot = i;
         aw_work_args[i].n = p_source->numSources;
     }
 
-    struct aw_disp_args_t disp_args = {wfqs, locks, 0, p_source, getPacket};
+    struct aw_disp_args_t disp_args = {wfqs, p_source, getPacket};
     pthread_t disp_thread;
 
     // spin up threads
