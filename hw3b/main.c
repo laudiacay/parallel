@@ -11,10 +11,10 @@
 
 int usage() {
     printf("Usage:\n");
-    printf("\t   Serial: ./packets s m n W pd sd D L S\n");
-    printf("\t LockFree: ./packets l m n W pd sd D L S\n");
-    printf("\tHomeQueue: ./packets h m n W pd sd D L S\n");
-    printf("\t  Awesome: ./packets a m n W pd sd D L S\n");
+    printf("\t   Serial: ./packets s m n W pd sd D L\n");
+    printf("\t LockFree: ./packets l m n W pd sd D L\n");
+    printf("\tHomeQueue: ./packets h m n W pd sd D L\n");
+    printf("\t  Awesome: ./packets a m n W pd sd D L\n");
     printf(" m: # milliseconds that experiment should run\n");
     printf(" n: number of sources\n");
     printf(" W: mean work per packet\n");
