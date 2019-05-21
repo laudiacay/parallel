@@ -15,7 +15,7 @@ def run_packets_n_times(arg_tup, n):
     li = [run_packets(*arg_tup, sd=i) for i in range(n)]
     return sum(li)/n
 
-m = 4000
+m = 2000
 n_opts = [1, 2, 3, 7, 13, 27]
 W_opts = [1000, 2000, 4000, 8000]
 
