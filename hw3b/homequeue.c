@@ -33,7 +33,10 @@ void* homequeue_worker(void* v_hq_work_args) {
             continue;
         }
         lock(mylock, &alock_slot);
-        if (! (packet = (volatile Packet_t*) deq(wfq))) continue;
+        if (! (packet = (volatile Packet_t*) deq(wfq))) {
+            unlock(mylock, &alock_slot); continue;
+        }
+        //printf("got packet\n");
         unlock(mylock, &alock_slot);
         getFingerprint(packet->iterations, packet->seed);
         free((void*) packet);
@@ -59,7 +62,10 @@ void* homequeue_dispatcher(void* v_disp_args) {
 
     while (!hq_should_quit) {
         for (int t = 0; t < n; t++) {
-            while (isfull(wfqs[t])) sleep(0);
+            while (isfull(wfqs[t])) {
+                sleep(0);
+                //printf("dispatcher stuck\n");
+            }
             assert(!enq(wfqs[t], getPacket(p_source, t)));
         }
     }
