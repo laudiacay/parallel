@@ -5,6 +5,6 @@
 
 void awesome_exp(PacketSource_t* packetsource,
     volatile Packet_t* (*getPacket)(PacketSource_t*, int),
-    long m, int n, long W, char pd, short sd, int D, char L);
+    long m, int n, int D, char L);
 
 #endif

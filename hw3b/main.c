@@ -63,6 +63,7 @@ int main(int argc, char *argv[]) {
             getCount = getExponentialCount;
             break;
         default:
+            deletePacketSource(p_source);
             return usage();
     }
 
@@ -77,9 +78,10 @@ int main(int argc, char *argv[]) {
             homequeue_exp(p_source, getPacket, m, n, D, L);
             break;
         case 'a':
-            awesome_exp(p_source, getPacket, m, n, W, pd, sd, D, L);
+            awesome_exp(p_source, getPacket, m, n, D, L);
             break;
         default:
+            deletePacketSource(p_source);
             return usage();
     }
 
