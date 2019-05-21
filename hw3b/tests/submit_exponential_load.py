@@ -8,7 +8,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --time=2:00:00
-#SBATCH --partition=general
+#SBATCH --partition=cmsc23010
 #SBATCH --exclusive
 
 python3 speedup_exponential_load.py
