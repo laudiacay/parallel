@@ -35,7 +35,8 @@ opt = 'a'
 for L in L_opts:
     for W in W_opts:
         for n in n_opts:
-            result_dict[(opt, L, W, n)] = run_packets_n_times((opt, m, n, W, pd, D, L), 11)
+            result_dict[(opt, L, W, n)] = run_packets_n_times((opt, m, n, W, pd, D, L), 5)
+
 L = 'm'
 for W in W_opts:
     for n in n_opts:
