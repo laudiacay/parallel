@@ -1,10 +1,13 @@
 import subprocess as sp
 
 def run_packets(opt, m, n, W, pd, D, L, sd=0):
-    run = sp.Popen(['../packets', str(opt), str(m), str(n), str(W), str(pd),
+    try:
+        run = sp.Popen(['../packets', str(opt), str(m), str(n), str(W), str(pd),
                                 str(sd), str(D), str(L)],
-        stdout=sp.PIPE
-    )
+            stdout=sp.PIPE, timeout=m/1000 + 3
+        )
+    except sp.TimeoutExpired:
+        return run_packets(opt, m, n, W, pd, D, L, sd=sd)
     throughput = float(run.stdout.readline().strip())
     return throughput
 
