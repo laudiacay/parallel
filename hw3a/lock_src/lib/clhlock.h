@@ -20,10 +20,10 @@ void* init_clhlock();
 
 void destroy_clhlock(void* v_clhlock);
 
-void clh_lock(void* v_clhlock, struct QNode** myNode);
+void clh_lock(void* v_clhlock, struct QNode* myNode);
 
-int clh_trylock(void* v_clhlock, struct QNode** myNode);
+int clh_trylock(void* v_clhlock, struct QNode* myNode);
 
-void clh_unlock(struct QNode** myNode);
+void clh_unlock(struct QNode* myNode);
 
 #endif

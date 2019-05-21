@@ -27,15 +27,17 @@ void destroy_clhlock(void* v_clhlock) {
 
 void clh_lock(void* v_clhlock, struct QNode** myNode) {
     struct CLHLock* clhlock = (struct CLHLock*) v_clhlock;
+    printf("enqueueing thread %d\n", );
     (*myNode)->locked = 1;
-    struct QNode* pred = atomic_exchange(&(clhlock->tail), *myNode);
-    (*myNode)->prev = pred;
-    while (pred->locked);
+    (*myNode)->prev = atomic_exchange(&(clhlock->tail), *myNode);
+    while ((*myNode)->prev->locked);
+    //free((*myNode)->prev);
 }
 
+
+// TODO: wrong, redo me
 int clh_trylock(void* v_clhlock, struct QNode** myNode) {
-    struct CLHLock* clhlock = (struct CLHLock*) v_clhlock;
-    if (!(clhlock->tail)->locked) {
+    if (!((*myNode)->prev)->locked) {
         clh_lock(v_clhlock, myNode);
         return 1;
     }
@@ -43,7 +45,6 @@ int clh_trylock(void* v_clhlock, struct QNode** myNode) {
 }
 
 void clh_unlock(struct QNode** myNode) {
-    struct QNode* pred = (*myNode)->prev;
     (*myNode)->locked = 0;
-    *myNode = pred;
+    *myNode = (*myNode)->prev;
 }

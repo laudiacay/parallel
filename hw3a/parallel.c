@@ -9,12 +9,12 @@ void* parallel_worker(void* w_as) {
     struct worker_args* w_as_struct = (struct worker_args*) w_as;
     struct lock* my_lock = w_as_struct->my_lock;
     while (w_as_struct->increment_me < w_as_struct->B) {
-        lock(my_lock, &(w_as_struct->my_slot), &(w_as_struct->myNode));
+        lock(my_lock, &(w_as_struct->my_slot), w_as_struct->myNode);
 
         if (w_as_struct->increment_me < w_as_struct->B)
             w_as_struct->increment_me++;
 
-        unlock(my_lock, &(w_as_struct->my_slot), &(w_as_struct->myNode));
+        unlock(my_lock, &(w_as_struct->my_slot), w_as_struct->myNode);
     }
     return NULL;
 }
