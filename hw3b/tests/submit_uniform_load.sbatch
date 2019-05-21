@@ -7,8 +7,9 @@
 #SBATCH --job-name=uniform
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --time=2:00:00
-#SBATCH --partition=cmsc23010
+#SBATCH --time=4:00:00
 #SBATCH --exclusive
+#SBATCH --qos=stafftest
 
+module load python/3.6.1+intel-16.0
 python3 speedup_uniform_load.py

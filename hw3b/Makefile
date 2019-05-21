@@ -1,4 +1,4 @@
-CCBIN=/usr/bin/gcc
+CCBIN=gcc
 CCFAST=$(CCBIN) -Wall -Wextra -Werror -pedantic -g
 CCDEBUG=$(CCFAST) -fsanitize=address -fno-omit-frame-pointer
 CC=$(CCFAST)

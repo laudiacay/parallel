@@ -30,15 +30,15 @@ opt = 'h'
 for L in L_opts:
     for W in W_opts:
         for n in n_opts:
-            #print('done with {}'.format((opt, L, W)))
-            #result_dict[(opt, L, W, n)] = run_packets_n_times((opt, m, n, W, pd, D, L), 1)
             result_dict[(opt, L, W, n)] = run_packets_n_times((opt, m, n, W, pd, D, L), 5)
+opt = 'a'
+for L in L_opts:
+    for W in W_opts:
+        for n in n_opts:
+            result_dict[(opt, L, W, n)] = run_packets_n_times((opt, m, n, W, pd, D, L), 11)
 L = 'm'
 for W in W_opts:
     for n in n_opts:
-        #print('done with {}'.format((opt, L, W)))
-        #result_dict[('l', L, W, n)] = run_packets_n_times(('l', m, n, W, pd, D, L), 1)
-        #result_dict[('s', L, W, n)] = run_packets_n_times(('s', m, n, W, pd, D, L), 1)
         result_dict[('l', L, W, n)] = run_packets_n_times(('l', m, n, W, pd, D, L), 5)
         result_dict[('s', L, W, n)] = run_packets_n_times(('s', m, n, W, pd, D, L), 5)
 
