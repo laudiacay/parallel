@@ -20,7 +20,7 @@ void* lockfree_worker(void* v_wfq) {
             sleep(0);
             continue;
         }
-        while (! (packet = (volatile Packet_t*) deq(wfq))) sleep(0);
+        if (! (packet = (volatile Packet_t*) deq(wfq))) continue;
         getFingerprint(packet->iterations, packet->seed);
         free((void*) packet);
     }

@@ -62,10 +62,7 @@ void* homequeue_dispatcher(void* v_disp_args) {
 
     while (!hq_should_quit) {
         for (int t = 0; t < n; t++) {
-            while (isfull(wfqs[t])) {
-                sleep(0);
-                //printf("dispatcher stuck\n");
-            }
+            while (isfull(wfqs[t])) sleep(0);
             assert(!enq(wfqs[t], getPacket(p_source, t)));
         }
     }
