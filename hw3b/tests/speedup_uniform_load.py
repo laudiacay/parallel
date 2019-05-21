@@ -12,13 +12,17 @@ def run_packets_n_times(arg_tup, n):
     li = [run_packets(*arg_tup, sd=i) for i in range(n)]
     return sum(li)/n
 
-m = 10000
-#m = 10
+m = 4000
 n_opts = [1, 2, 3, 7, 13, 27]
-#n_opts = [1, 2, 3]
-L_opts = ['m', 'a']
 W_opts = [1000, 2000, 4000, 8000]
-#W_opts = [400, 800]
+
+'''
+m = 10
+n_opts = [1, 2, 3]
+W_opts = [400, 800]
+'''
+
+L_opts = ['m', 'a']
 pd = 'u'
 D = 8
 result_dict = {}
@@ -38,11 +42,5 @@ for W in W_opts:
         result_dict[('l', L, W, n)] = run_packets_n_times(('l', m, n, W, pd, D, L), 5)
         result_dict[('s', L, W, n)] = run_packets_n_times(('s', m, n, W, pd, D, L), 5)
 
-for W in W_opts:
-    print("W = {}".format(W))
-    print(',l,hm,ha')
-    for n in n_opts:
-        l_speedup = result_dict[('s', 'm', W, n)] / result_dict[('l', 'm', W, n)]
-        hm_speedup = result_dict[('s', 'm', W, n)] / result_dict[('h', 'm', W, n)]
-        ha_speedup = result_dict[('s', 'm', W, n)] / result_dict[('h', 'a', W, n)]
-        print(str(n) + ',' + str(l_speedup) + ',' + str(hm_speedup) + ',' + str(ha_speedup))
+for k, v in result_dict.items():
+    print('u,'+','.join([str(i) for i in list(k)]) +','+str(v))
