@@ -33,8 +33,7 @@ void* homequeue_worker(void* v_hq_work_args) {
             continue;
         }
         lock(mylock, &alock_slot);
-        if (isempty(wfq)) { unlock(mylock, &alock_slot); continue; }
-        while (! (packet = (volatile Packet_t*) deq(wfq))) sleep(0);
+        if (! (packet = (volatile Packet_t*) deq(wfq))) continue;
         unlock(mylock, &alock_slot);
         getFingerprint(packet->iterations, packet->seed);
         free((void*) packet);
