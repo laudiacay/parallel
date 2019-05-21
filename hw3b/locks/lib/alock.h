@@ -2,7 +2,7 @@
 #define _ALOCK_H
 
 struct Alock {
-    _Atomic volatile int tail;
+    _Atomic volatile unsigned int tail;
     int* flag;
     int size;
 };

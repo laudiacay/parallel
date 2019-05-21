@@ -35,19 +35,27 @@ void* awesome_worker(void* v_aw_work_args) {
     struct lock* mylock = locks[cur_queue_num];
 
     while (!aw_should_quit) {
-        lock(mylock, &alock_slot);
-        if (isempty(wfq)) { unlock(mylock, &alock_slot); continue; }
-        while (! (packet = (volatile Packet_t*) deq(wfq))) {
-            cur_queue_num++;
-            unlock(mylock, &alock_slot);
-            wfq = wfqs[cur_queue_num % n];
-            mylock = locks[cur_queue_num % n];
-            if (aw_should_quit) return NULL;
-            lock(mylock, &alock_slot);
+        //printf("%d tried lock %d\n", alock_slot, cur_queue_num);
+        if (!trylock(mylock, &alock_slot)) {
+            cur_queue_num = (cur_queue_num + 1) % n;
+            wfq = wfqs[cur_queue_num];
+            mylock = locks[cur_queue_num];
+            continue;
         }
-        unlock(mylock, &alock_slot);
-        getFingerprint(packet->iterations, packet->seed);
-        free((void*) packet);
+        //printf("%d got lock %d\n", alock_slot, cur_queue_num);
+        if (!(packet = (volatile Packet_t*) deq(wfq))) {
+            unlock(mylock, &alock_slot);
+            //printf("%d released lock %d\n", alock_slot, cur_queue_num);
+            cur_queue_num = (cur_queue_num + 1) % n;
+            wfq = wfqs[cur_queue_num];
+            mylock = locks[cur_queue_num];
+            continue;
+        } else {
+            unlock(mylock, &alock_slot);
+            //printf("%d released lock %d\n", alock_slot, cur_queue_num);
+            getFingerprint(packet->iterations, packet->seed);
+            free((void*) packet);
+        }
     }
 
     return NULL;
@@ -70,8 +78,11 @@ void* awesome_dispatcher(void* v_disp_args) {
 
     while (!aw_should_quit) {
         for (int t = 0; t < n; t++) {
-            if (!isfull(wfqs[t]))
-                assert(!enq(wfqs[t], getPacket(p_source, t)));
+            while (isfull(wfqs[t])) {
+                sleep(0);
+                //printf("stuck on queue %d\n", t);
+            }
+            assert(!enq(wfqs[t], getPacket(p_source, t)));
         }
     }
     return NULL;

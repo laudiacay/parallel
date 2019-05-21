@@ -1,7 +1,7 @@
 CCBIN=gcc
 CCFAST=$(CCBIN) -Wall -Wextra -Werror -pedantic -g
 CCDEBUG=$(CCFAST) -fsanitize=address -fno-omit-frame-pointer
-CC=$(CCFAST)
+CC=$(CCDEBUG)
 
 FLAGS=-O3 -lm -lpthread -pthread
 

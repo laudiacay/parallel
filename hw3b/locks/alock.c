@@ -37,7 +37,7 @@ void a_lock(void* v_alock, int* myslot) {
 
 int a_trylock(void* v_alock, int* myslot) {
     struct Alock* alock = (struct Alock*) v_alock;
-    if (alock->flag[alock->tail]) {
+    if (alock->flag[alock->tail % alock->size]) {
         a_lock(v_alock, myslot);
         return 1;
     }
