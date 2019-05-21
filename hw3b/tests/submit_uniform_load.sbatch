@@ -8,7 +8,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --time=2:00:00
-#SBATCH --partition=cmsc23010
+#SBATCH --partition=general
 #SBATCH --exclusive
 
 python3 speedup_uniform_load.py
