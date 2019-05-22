@@ -1,0 +1,40 @@
+Traceback (most recent call last):
+  File "/software/python-3.6.1-el7-x86_64+intel-16.0/lib/python3.6/subprocess.py", line 405, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+  File "/software/python-3.6.1-el7-x86_64+intel-16.0/lib/python3.6/subprocess.py", line 836, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+  File "/software/python-3.6.1-el7-x86_64+intel-16.0/lib/python3.6/subprocess.py", line 1497, in _communicate
+    self._check_timeout(endtime, orig_timeout)
+  File "/software/python-3.6.1-el7-x86_64+intel-16.0/lib/python3.6/subprocess.py", line 864, in _check_timeout
+    raise TimeoutExpired(self.args, orig_timeout)
+subprocess.TimeoutExpired: Command '['../packets', 'h', '2000', '1', '1000', 'e', '4', '8', 'a']' timed out after 5.0 seconds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "speedup_exponential_load.py", line 7, in run_packets
+    timeout=m/1000 + 3, stdout=sp.PIPE, stderr=sp.PIPE
+  File "/software/python-3.6.1-el7-x86_64+intel-16.0/lib/python3.6/subprocess.py", line 410, in run
+    stderr=stderr)
+subprocess.TimeoutExpired: Command '['../packets', 'h', '2000', '1', '1000', 'e', '4', '8', 'a']' timed out after 5.0 seconds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "speedup_exponential_load.py", line 32, in <module>
+    result_dict[(opt, L, W, n)] = run_packets_n_times((opt, m, n, W, pd, D, L), 11)
+  File "speedup_exponential_load.py", line 15, in run_packets_n_times
+    li = [run_packets(*arg_tup, sd=i) for i in range(n)]
+  File "speedup_exponential_load.py", line 15, in <listcomp>
+    li = [run_packets(*arg_tup, sd=i) for i in range(n)]
+  File "speedup_exponential_load.py", line 10, in run_packets
+    return run_packets(opt, m, n, W, pd, D, L, sd=sd)
+  File "speedup_exponential_load.py", line 7, in run_packets
+    timeout=m/1000 + 3, stdout=sp.PIPE, stderr=sp.PIPE
+  File "/software/python-3.6.1-el7-x86_64+intel-16.0/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/software/python-3.6.1-el7-x86_64+intel-16.0/lib/python3.6/subprocess.py", line 707, in __init__
+    restore_signals, start_new_session)
+  File "/software/python-3.6.1-el7-x86_64+intel-16.0/lib/python3.6/subprocess.py", line 1326, in _execute_child
+    raise child_exception_type(errno_num, err_msg)
+FileNotFoundError: [Errno 2] No such file or directory: '../packets'

@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "speedup_uniform_load.py", line 41, in <module>
+    result_dict[(opt, L, W, n)] = run_packets_n_times((opt, m, n, W, pd, D, L), 5)
+  File "speedup_uniform_load.py", line 15, in run_packets_n_times
+    li = [run_packets(*arg_tup, sd=i) for i in range(n)]
+  File "speedup_uniform_load.py", line 15, in <listcomp>
+    li = [run_packets(*arg_tup, sd=i) for i in range(n)]
+  File "speedup_uniform_load.py", line 11, in run_packets
+    throughput = float(run.stdout.rstrip())
+ValueError: could not convert string to float: 
