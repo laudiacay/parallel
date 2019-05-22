@@ -22,7 +22,7 @@ void mut_lock(void* v_mutlock) {
 
 int mut_trylock(void* v_mutlock) {
     struct Mutlock* mutlock = (struct Mutlock*) v_mutlock;
-    return pthread_mutex_trylock(&mutlock->mutex);
+    return !pthread_mutex_trylock(&mutlock->mutex);
 }
 
 void mut_unlock(void* v_mutlock) {
