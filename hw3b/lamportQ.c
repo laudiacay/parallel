@@ -10,29 +10,37 @@ struct WaitFreeQueue* makeWaitFreeQueue(int capacity) {
 }
 
 // return 0 for success, 1 for fail
-int enq(struct WaitFreeQueue* wfq, volatile void* item) {
+int enq(struct WaitFreeQueue* wfq, void volatile* item) {
+    __sync_synchronize();
     if (wfq->tail - wfq->head == wfq->capacity) return 1;
+    __sync_synchronize();
     wfq->items[wfq->tail % wfq->capacity] = item;
     __sync_synchronize();
     wfq->tail++;
+    __sync_synchronize();
     return 0;
 }
 
 // returns 1 if full, else 0
 int isfull(struct WaitFreeQueue* wfq) {
+    __sync_synchronize();
     return (wfq->tail - wfq->head == wfq->capacity);
 }
 
 int isempty(struct WaitFreeQueue* wfq) {
+    __sync_synchronize();
     return (wfq->tail - wfq->head == 0);
 }
 
 // return item for success, NULL for fail
 volatile void* deq(struct WaitFreeQueue* wfq) {
+    __sync_synchronize();
     if (wfq->tail - wfq->head == 0) return NULL;
+    __sync_synchronize();
     void* item = (void*) wfq->items[wfq->head % wfq->capacity];
     __sync_synchronize();
     wfq->head++;
+    __sync_synchronize();
     return item;
 }
 

@@ -11,6 +11,7 @@
 #include "lib/lamportQ.h"
 
 volatile int aw_should_quit = 0;
+volatile int aw_disp_done = 0;
 
 struct aw_work_args_t {
     struct WaitFreeQueue** wfqs;
@@ -34,7 +35,7 @@ void* awesome_worker(void* v_aw_work_args) {
     struct WaitFreeQueue* wfq = wfqs[cur_queue_num];
     struct lock* mylock = locks[cur_queue_num];
 
-    while (!aw_should_quit) {
+    while (!aw_should_quit || !aw_disp_done) {
         //printf("%d tried lock %d\n", alock_slot, cur_queue_num);
         if (!trylock(mylock, &alock_slot)) {
             cur_queue_num = (cur_queue_num + 1) % n;
@@ -120,6 +121,7 @@ void awesome_exp(PacketSource_t* p_source,
     timer(&aw_should_quit, m);
 
     assert(!pthread_join(disp_thread, NULL));
+    aw_disp_done = 1;
     for (int t = 0; t < n; t++)
         assert(!pthread_join(threads[t], NULL));
 

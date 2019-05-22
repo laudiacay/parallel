@@ -9,13 +9,14 @@
 #include "provided/lib/fingerprint.h"
 
 volatile int lf_should_quit = 0;
+volatile int lf_disp_done = 0;
 
 void* lockfree_worker(void* v_wfq) {
     struct WaitFreeQueue* wfq = (struct WaitFreeQueue*) v_wfq;
 
     volatile Packet_t* packet;
 
-    while (!lf_should_quit) {
+    while (!lf_should_quit || !lf_disp_done) {
         if (isempty(wfq)) {
             sleep(0);
             continue;
@@ -73,6 +74,7 @@ void lockfree_exp(PacketSource_t* p_source,
     timer(&lf_should_quit, m);
 
     assert(!pthread_join(disp_thread, NULL));
+    lf_disp_done = 1;
     for (int t = 0; t < n; t++)
         assert(!pthread_join(threads[t], NULL));
 

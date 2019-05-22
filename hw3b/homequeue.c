@@ -11,6 +11,7 @@
 #include "lib/lamportQ.h"
 
 volatile int hq_should_quit = 0;
+volatile int hq_disp_done = 0;
 
 struct hq_work_args_t {
     struct WaitFreeQueue* wfq;
@@ -27,7 +28,7 @@ void* homequeue_worker(void* v_hq_work_args) {
 
     volatile Packet_t* packet;
 
-    while (!hq_should_quit) {
+    while (!hq_should_quit || !hq_disp_done) {
         if (isempty(wfq)) {
             sleep(0);
             continue;
@@ -95,6 +96,7 @@ void homequeue_exp(PacketSource_t* p_source,
     timer(&hq_should_quit, m);
 
     assert(!pthread_join(disp_thread, NULL));
+    hq_disp_done = 1;
     for (int t = 0; t < n; t++)
         assert(!pthread_join(threads[t], NULL));
 
